@@ -5,8 +5,8 @@ FROM maven:3.8.4-openjdk-17 AS build
 WORKDIR /app
 
 # Copy the pom.xml and download dependencies
-COPY Backend/pom.xml .
-COPY Backend/src ./src
+COPY pom.xml .
+COPY src ./src
 
 RUN mvn dependency:go-offline
 RUN mvn clean package -DskipTests
