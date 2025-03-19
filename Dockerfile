@@ -1,21 +1,26 @@
-# Imagen base con Maven y Java 17 para construir la aplicación
+# Usar Maven con OpenJDK 17 para construir la aplicación
 FROM maven:3.8.4-openjdk-17 AS build
 
 WORKDIR /app
 
-# Copiar el código fuente y compilar
+# Copiar archivos y compilar el proyecto con el perfil Docker
 COPY pom.xml . 
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -Pdocker
 
-# Usar un servidor Tomcat como base
-FROM tomcat:9.0-jdk17
+# Imagen base para ejecutar el JAR
+FROM openjdk:17-jdk-slim
 
-WORKDIR /usr/local/tomcat/webapps/
+WORKDIR /app
 
-# Copiar el .war generado en la fase de construcción
-COPY --from=build /app/target/Holos-0.0.1-SNAPSHOT.war ./ROOT.war
+# Copiar el JAR compilado
+COPY --from=build /app/target/Holos-0.0.1-SNAPSHOT.jar .
 
+# Copiar archivos JSP y recursos
+COPY src/main/webapp/ /app/webapp/
+
+# Exponer el puerto de la aplicación
 EXPOSE 8080
 
-CMD ["catalina.sh", "run"]
+# Ejecutar la aplicación con el perfil Docker
+ENTRYPOINT ["java", "-jar", "/app/Holos-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=docker"]
