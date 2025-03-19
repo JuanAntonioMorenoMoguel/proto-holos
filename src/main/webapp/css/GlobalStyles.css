@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #007bff;
+}
+
+/* Hacer que el texto se ajuste en pantallas pequeñas */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}
+
+/* Hacer que los elementos se muestren de manera más ancha en pantallas grandes */
+@media (min-width: 601px) {
+    h1 {
+        font-size: 36px;
+    }
+}
